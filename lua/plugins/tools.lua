@@ -35,6 +35,120 @@ return {
         },
     },
 
+    -- Enhanced Git client (Magit-like interface)
+    {
+        "NeogitOrg/neogit",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "sindrets/diffview.nvim",
+            "nvim-telescope/telescope.nvim",
+        },
+        cmd = "Neogit",
+        keys = {
+            { "<leader>gg", "<cmd>Neogit<CR>", desc = "Neogit" },
+            { "<leader>gc", "<cmd>Neogit commit<CR>", desc = "Git commit" },
+            { "<leader>gp", "<cmd>Neogit pull<CR>", desc = "Git pull" },
+            { "<leader>gP", "<cmd>Neogit push<CR>", desc = "Git push" },
+            { "<leader>gb", "<cmd>Neogit branch<CR>", desc = "Git branches" },
+            { "<leader>gl", "<cmd>Neogit log<CR>", desc = "Git log" },
+        },
+        opts = {
+            kind = "split",
+            integrations = {
+                diffview = true,
+                telescope = true,
+            },
+            signs = {
+                section = { "", "" },
+                item = { "", "" },
+                hunk = { "", "" },
+            },
+            disable_context_highlighting = false,
+            disable_commit_confirmation = false,
+            disable_line_numbers = true,
+            status = {
+                recent_commit_count = 10,
+            },
+            popup = {
+                kind = "split",
+            },
+            sections = {
+                untracked = {
+                    folded = false,
+                    hidden = false,
+                },
+                unstaged = {
+                    folded = false,
+                    hidden = false,
+                },
+                staged = {
+                    folded = false,
+                    hidden = false,
+                },
+                stashes = {
+                    folded = true,
+                    hidden = false,
+                },
+                unpulled = {
+                    folded = true,
+                    hidden = false,
+                },
+                unmerged = {
+                    folded = false,
+                    hidden = false,
+                },
+                recent = {
+                    folded = false,
+                    hidden = false,
+                },
+            },
+        },
+        -- Just use the default setup without trying to modify the buffer
+        config = function(_, opts)
+            require("neogit").setup(opts)
+        end,
+    },
+
+    -- DiffView for better diff visualization
+    {
+        "sindrets/diffview.nvim",
+        dependencies = "nvim-lua/plenary.nvim",
+        cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+        keys = {
+            { "<leader>gd", "<cmd>DiffviewOpen<CR>", desc = "Git diff" },
+            { "<leader>gh", "<cmd>DiffviewFileHistory %<CR>", desc = "File history" },
+            { "<leader>gH", "<cmd>DiffviewFileHistory<CR>", desc = "Repo history" },
+            { "<leader>gm", "<cmd>DiffviewOpen origin/main<CR>", desc = "Diff with main" },
+        },
+        opts = {
+            enhanced_diff_hl = true,
+            view = {
+                default = {
+                    layout = "diff2_horizontal",
+                    winbar_info = true,
+                },
+                file_history = {
+                    layout = "diff2_horizontal",
+                    winbar_info = true,
+                },
+            },
+            file_panel = {
+                listing_style = "tree",
+                tree_options = {
+                    flatten_dirs = true,
+                    folder_statuses = "only_folded",
+                },
+            },
+            hooks = {
+                diff_buf_read = function(bufnr)
+                    -- Set options for diff buffers
+                    vim.opt_local.wrap = false
+                    vim.opt_local.colorcolumn = ""
+                end,
+            },
+        },
+    },
+
     -- Enhanced terminal
     {
         "akinsho/toggleterm.nvim",

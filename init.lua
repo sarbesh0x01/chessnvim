@@ -25,6 +25,7 @@ end
 require("config.options")
 require("config.keymaps")
 require("config.highlights")
+require("config.keymap_help")
 require("config.diagnostics").setup() -- Load diagnostic configuration
 
 -- Setup lazy.nvim
