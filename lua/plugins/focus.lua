@@ -1,9 +1,11 @@
 -- Add to lua/plugins/focus.lua
 return {
-    -- Centered cursor mode - keeps cursor in the middle like focus on center of board
+    -- Centered cursor mode
     "arnamak/stay-centered.nvim",
     config = function()
-        require("stay-centered").setup({
+        local stay_centered = require("stay-centered")
+        
+        stay_centered.setup({
             -- Options for centered cursor navigation
             skip_filetypes = {
                 "neo-tree",
@@ -12,12 +14,13 @@ return {
             },
         })
         
-        -- Add chess-themed commands
+        -- Add chess-themed commands with proper API calls
         vim.api.nvim_create_user_command("ChessFocus", function()
             -- Enable everything for deep focus
             vim.cmd("ZenMode")
             vim.cmd("Twilight")
-            vim.cmd("StayCentered")
+            -- Use the proper API call instead of a command
+            stay_centered.enable()
             vim.notify("♚ Grand Master focus mode activated", vim.log.levels.INFO)
         end, {})
         
@@ -25,7 +28,8 @@ return {
             -- Disable everything and return to normal
             vim.cmd("ZenMode")
             vim.cmd("TwilightDisable")
-            vim.cmd("StayCenteredDisable")
+            -- Use the proper API call instead of a command
+            stay_centered.disable()
             vim.notify("♟ Returned to the full chess board", vim.log.levels.INFO)
         end, {})
         
