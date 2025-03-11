@@ -27,6 +27,7 @@ require("config.keymaps")
 require("config.highlights")
 require("config.keymap_help")
 require("config.diagnostics").setup() -- Load diagnostic configuration
+require('config.youtube_standalone').setup()
 
 -- Setup lazy.nvim
 require("lazy").setup({
@@ -56,7 +57,7 @@ require("lazy").setup({
             runtime = " ",
             require = "󰢱 ",
             source = " ",
-            start = " ",
+           start = " ",
             task = "✔ ",
             list = {
                 "●",
