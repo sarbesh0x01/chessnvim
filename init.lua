@@ -29,6 +29,9 @@ require("config.keymap_help")
 require("config.diagnostics").setup() -- Load diagnostic configuration
 require('config.youtube_standalone').setup()
 
+-- Set author information for ChessDoc (will be available globally)
+vim.g.chessdoc_author = "Sarbesh KC"
+
 -- Setup lazy.nvim
 require("lazy").setup({
     -- Import all plugins from the lua/plugins directory
@@ -82,3 +85,5 @@ require("lazy").setup({
         },
     },
 })
+
+
