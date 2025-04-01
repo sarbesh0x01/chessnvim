@@ -1,4 +1,4 @@
---frdBootstrap lazy.nvim package manager
+--Bootstrap lazy.nvim package manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
@@ -32,6 +32,16 @@ require('config.youtube_standalone').setup()
 -- Set author information for ChessDoc (will be available globally)
 vim.g.chessdoc_author = "Sarbesh KC"
 
+-- Configure Go tools and settings
+vim.g.go_fmt_command = "gofumpt"
+vim.g.go_imports_autosave = 1
+vim.g.go_highlight_types = 1
+vim.g.go_highlight_fields = 1
+vim.g.go_highlight_functions = 1
+vim.g.go_highlight_function_calls = 1
+vim.g.go_highlight_extra_types = 1
+vim.g.go_highlight_operators = 1
+
 -- Setup lazy.nvim
 require("lazy").setup({
     -- Import all plugins from the lua/plugins directory
@@ -60,7 +70,7 @@ require("lazy").setup({
             runtime = " ",
             require = "󰢱 ",
             source = " ",
-           start = " ",
+            start = " ",
             task = "✔ ",
             list = {
                 "●",
@@ -86,4 +96,16 @@ require("lazy").setup({
     },
 })
 
-
+-- Post-initialization message
+vim.api.nvim_create_autocmd("User", {
+    pattern = "LazyVimStarted",
+    callback = function()
+        -- Check if Go tools are installed
+        local go_ok = vim.fn.executable("go") == 1
+        if go_ok then
+            vim.notify("♟️ Go development environment loaded!", vim.log.levels.INFO)
+        else
+            vim.notify("Go executable not found. Please install Go for full functionality.", vim.log.levels.WARN)
+        end
+    end,
+})

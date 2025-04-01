@@ -1,4 +1,4 @@
--- lua/plugins/lsp.lua - Unified LSP configuration with compatible WhichKey format
+-- lua/plugins/lsp.lua - Unified LSP configuration with Go support
 return {
     -- LSP Configuration
     {
@@ -31,10 +31,11 @@ return {
                 -- Ensure these servers are installed
                 ensure_installed = {
                     "clangd", -- C/C++ support
-                    "ts_ls", -- JavaScript/TypeScript (replacing deprecated tsserver)
+                    "ts_ls", -- JavaScript/TypeScript
                     "html", -- HTML
                     "cssls", -- CSS
                     "emmet_ls", -- Emmet
+                    "gopls", -- Go support
                 },
                 automatic_installation = true,
             })
@@ -382,10 +383,47 @@ return {
                     single_file_support = true,
                 })
             end
+            
+            -------------------------
+            -- Go Server Setup --
+            -------------------------
+            local function setup_go_servers()
+                -- Go language server
+                lspconfig.gopls.setup({
+                    on_attach = on_attach,
+                    capabilities = capabilities,
+                    cmd = {"gopls", "serve"},
+                    filetypes = {"go", "gomod", "gowork", "gotmpl"},
+                    root_dir = lspconfig.util.root_pattern("go.work", "go.mod", ".git"),
+                    settings = {
+                        gopls = {
+                            analyses = {
+                                unusedparams = true,
+                                shadow = true,
+                            },
+                            staticcheck = true,
+                            gofumpt = true,
+                            usePlaceholders = true,
+                            completeUnimported = true,
+                            matcher = "fuzzy",
+                        },
+                    },
+                })
+                
+                -- Add Go-specific commands
+                local ok, wk = pcall(require, "which-key")
+                if ok then
+                    wk.register({
+                        ["<leader>lgo"] = { ":GoImports<CR>", "Organize Imports" },
+                        ["<leader>lgf"] = { ":GoFmt<CR>", "Format Go Code" },
+                    })
+                end
+            end
 
             -- Execute server setup functions
             setup_clangd()
             setup_web_servers()
+            setup_go_servers()
         end,
     },
 
@@ -419,18 +457,20 @@ return {
                 typescriptreact = { "prettier" },
                 html = { "prettier" },
                 css = { "prettier" },
+                
+                -- Go formatters
+                go = { "gofumpt", "goimports" },
             },
             format_on_save = {
                 timeout_ms = 500,
                 lsp_fallback = true,
+                
+                -- Format Go files on save
+                go = { "gofumpt", "goimports" },
             },
         },
     },
 
-    -- WhichKey integration for LSP commands (USING CLASSIC FORMAT)
-    -- Update this section in your lua/plugins/lsp.lua
-
-    -- Remove or comment out this WhichKey section at the end of your lsp.lua file:
     -- WhichKey integration for LSP commands (USING CLASSIC FORMAT)
     {
         "folke/which-key.nvim",
@@ -450,6 +490,4 @@ return {
             },
         },
     },
-
-    -- It will be handled by our new which-key-override.lua file
 }

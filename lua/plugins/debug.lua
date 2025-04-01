@@ -6,6 +6,8 @@ return {
         "theHamsta/nvim-dap-virtual-text",
         -- For C++ debugging
         "nvim-telescope/telescope-dap.nvim",
+
+        "nvim-neotest/nvim-nio", -- Add this line for the missing dependency
     },
     keys = {
         { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
